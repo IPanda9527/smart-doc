@@ -94,6 +94,11 @@ public class SpringMVCRequestMappingHandler {
                 shortUrl = DocUtil.handleMappingValue(annotation);
                 methodType = Methods.DELETE.getValue();
                 methodCounter++;
+            } else if ("javax.ws.rs.Path".equals(annotationName)) {
+                shortUrl = DocUtil.handleMappingValue(annotation);
+//                Object nameParam = annotation.getNamedParameter("method");
+                methodType = Methods.POST.getValue();
+                methodCounter++;
             }
         }
         if (methodCounter > 0) {

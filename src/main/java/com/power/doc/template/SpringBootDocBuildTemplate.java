@@ -65,7 +65,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         List<ApiDoc> apiDocList = new ArrayList<>();
         int order = 0;
         for (JavaClass cls : projectBuilder.getJavaProjectBuilder().getClasses()) {
-            if (!checkController(cls)) {
+            if (!checkController(cls,projectBuilder.getApiConfig())) {
                 continue;
             }
             if (StringUtil.isNotEmpty(apiConfig.getPackageFilters())) {
@@ -103,6 +103,11 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         for (JavaAnnotation annotation : classAnnotations) {
             String annotationName = annotation.getType().getName();
             if (DocAnnotationConstants.REQUEST_MAPPING.equals(annotationName) || DocGlobalConstants.REQUEST_MAPPING_FULLY.equals(annotationName)) {
+                if (annotation.getNamedParameter("value") != null) {
+                    baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
+                }
+            }
+            if (apiConfig.isDsf() && LyDsfAnnotations.DSF_PATH.equals(annotationName)) {
                 if (annotation.getNamedParameter("value") != null) {
                     baseUrl = StringUtil.removeQuotes(annotation.getNamedParameter("value").toString());
                 }
@@ -155,10 +160,13 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 // build request json
                 ApiRequestExample requestExample = buildReqJson(method, apiMethodDoc, requestMapping.getMethodType(),
                         projectBuilder);
+//                String json = JsonBuildHelper.buildJson(requestMapping.getMethodType(), gicTypeName, Boolean.FALSE, 0, new HashMap<>(), configBuilder);
                 String requestJson = requestExample.getExampleBody();
                 // set request example detail
                 apiMethodDoc.setRequestExample(requestExample);
                 apiMethodDoc.setRequestUsage(requestJson == null ? requestExample.getUrl() : requestJson);
+//                apiMethodDoc.setRequestUsage(requestJson == null ? requestExample.getUrl() : requestJson);
+//
                 // build response usage
                 apiMethodDoc.setResponseUsage(JsonBuildHelper.buildReturnJson(method, projectBuilder));
                 // build response params
@@ -194,7 +202,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         out:for (JavaParameter parameter : parameterList) {
             JavaType javaType = parameter.getType();
             String typeName = javaType.getFullyQualifiedName();
-            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName)) {
+            if (JavaClassValidateUtil.isMvcIgnoreParams(typeName) || !configBuilder.getApiConfig().isDsf()) {
                 continue;
             }
             String simpleTypeName = javaType.getValue().toLowerCase();
@@ -239,7 +247,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
                 if (null != annotationOfName) {
                     paramName = StringUtil.removeQuotes(annotationOfName.toString());
                 }
-                if (SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
+                if ( SpringMvcAnnotations.REQUEST_BODY.equals(annotationName) || DocGlobalConstants.REQUEST_BODY_FULLY.equals(annotationName)) {
                     apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
                     if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
                         StringBuilder builder = new StringBuilder();
@@ -314,6 +322,22 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             } else {
                 formDataList.addAll(FormDataBuildHelper.getFormData(gicTypeName, new HashMap<>(), 0, configBuilder, DocGlobalConstants.ENMPTY));
             }
+            if (configBuilder.getApiConfig().isDsf()) {
+                apiMethodDoc.setContentType(JSON_CONTENT_TYPE);
+                if (JavaClassValidateUtil.isPrimitive(simpleTypeName)) {
+                    StringBuilder builder = new StringBuilder();
+                    builder.append("{\"")
+                            .append(paramName)
+                            .append("\":")
+                            .append(DocUtil.handleJsonStr(mockValue))
+                            .append("}");
+                    requestExample.setJsonBody(JsonFormatUtil.formatJson(builder.toString())).setJson(true);
+                } else {
+                    String json = JsonBuildHelper.buildJson(typeName, gicTypeName, Boolean.FALSE, 0, new HashMap<>(), configBuilder);
+                    requestExample.setJsonBody(JsonFormatUtil.formatJson(json)).setJson(true);
+                }
+                continue ;
+            }
         }
         requestExample.setFormDataList(formDataList);
         String[] paths = apiMethodDoc.getPath().split(";");
@@ -333,7 +357,7 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
             url = UrlUtil.simplifyUrl(url);
             if (requestExample.isJson()) {
                 if (StringUtil.isNotEmpty(requestExample.getJsonBody())) {
-                    exampleBody = String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType, url,
+                    exampleBody = configBuilder.getApiConfig().isDsf() ? requestExample.getJsonBody() :String.format(DocGlobalConstants.CURL_POST_PUT_JSON, methodType, url,
                             requestExample.getJsonBody());
                 } else {
                     exampleBody = String.format(DocGlobalConstants.CURL_REQUEST_TYPE, methodType, url);
@@ -473,14 +497,17 @@ public class SpringBootDocBuildTemplate implements IDocBuildTemplate {
         return paramList;
     }
 
-    private boolean checkController(JavaClass cls) {
+    private boolean checkController(JavaClass cls, ApiConfig apiConfig) {
         List<JavaAnnotation> classAnnotations = cls.getAnnotations();
         for (JavaAnnotation annotation : classAnnotations) {
             String name = annotation.getType().getName();
             name = JavaClassUtil.getAnnotationSimpleName(name);
             if (SpringMvcAnnotations.CONTROLLER.equals(name) || SpringMvcAnnotations.REST_CONTROLLER.equals(name)) {
                 return true;
+            } else if (apiConfig.isDsf() && LyDsfAnnotations.DSF_PATH.equals(name)) {
+                return true;
             }
+
         }
         return false;
     }

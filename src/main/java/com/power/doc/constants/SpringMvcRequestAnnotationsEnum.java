@@ -37,7 +37,10 @@ public enum SpringMvcRequestAnnotationsEnum {
     REQUEST_BODY("RequestBody"),
     REQUEST_BODY_FULLY("org.springframework.web.bind.annotation.RequestBody"),
     REQUEST_HERDER("RequestHeader"),
-    REQUEST_HERDER_FULLY("org.springframework.web.bind.annotation.RequestHeader"),;
+    REQUEST_HERDER_FULLY("org.springframework.web.bind.annotation.RequestHeader"),
+    Produces("Produces"),
+    Produces_FULLY("javax.ws.rs.Produces"),
+    ;
     private String value;
 
     SpringMvcRequestAnnotationsEnum(String value) {

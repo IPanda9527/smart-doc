@@ -87,7 +87,7 @@ public interface DocGlobalConstants {
 
     String DICT_EN_TITLE = "Data Dictionaries";
 
-    String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+    String FIELD_SPACE = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
 
     String ANY_OBJECT_MSG = "any object.";
 

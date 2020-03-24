@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>smart-doc</artifactId>
     <packaging>jar</packaging>
-    <version>1.8.2</version>
+    <version>1.8.3.sof</version>
 
     <name>smart-doc</name>
     <url>https://github.com/shalousun/smart-doc.git</url>
@@ -60,6 +60,12 @@
             <groupId>com.github.shalousun</groupId>
             <artifactId>common-util</artifactId>
             <version>1.9.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-lang3</artifactId>
+                    <groupId>org.apache.commons</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--markdown to html-->
         <dependency>
@@ -153,16 +159,21 @@
                     </plugin>
                 </plugins>
             </build>
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                </snapshotRepository>
-                <repository>
-                    <id>oss</id>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
+
         </profile>
     </profiles>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>nexus-snapshots</name>
+            <url>http://nexus.17usoft.com/repository/mvn-flight-snapshot/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+        <repository>
+            <id>nexus-releases</id>
+            <name>nexus-releases</name>
+            <url>http://nexus.17usoft.com/repository/mvn-flight-release/</url>
+        </repository>
+    </distributionManagement>
+
 </project>

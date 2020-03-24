@@ -174,10 +174,10 @@ public class JavaClassValidateUtil {
      */
     public static boolean isJSR303Required(String annotationSimpleName) {
         switch (annotationSimpleName) {
-            case "NotNull":
-            case "NotEmpty":
-            case "NotBlank":
-            case "Required":
+            case "javax.validation.constraints.NotNull":
+            case "javax.validation.constraints.NotEmpty":
+            case "javax.validation.constraints.NotBlank":
+            case "javax.validation.constraints.Required":
                 return true;
             default:
                 return false;

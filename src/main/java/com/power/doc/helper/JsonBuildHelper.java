@@ -126,7 +126,7 @@ public class JsonBuildHelper {
             String gNameTemp = genericCanonicalName;
             String[] getKeyValType = DocClassUtil.getMapKeyValueType(gNameTemp);
             if (getKeyValType.length == 0) {
-                data.append("{\"mapKey\":{}}");
+                data.append("{}");
                 return data.toString();
             }
             if (!DocGlobalConstants.JAVA_STRING_FULLY.equals(getKeyValType[0])) {
@@ -147,7 +147,7 @@ public class JsonBuildHelper {
             }
             return data.toString();
         } else if (DocGlobalConstants.JAVA_OBJECT_FULLY.equals(typeName)) {
-                data.append("{\"object\":\" any object\"},");
+//                data.append("{\"object\":\" any object\"},");
                 // throw new RuntimeException("Please do not return java.lang.Object directly in api interface.");
         } else {
             List<JavaField> fields = JavaClassUtil.getFields(cls, 0);

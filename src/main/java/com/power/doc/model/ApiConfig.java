@@ -39,44 +39,45 @@ public class ApiConfig {
     /**
      * Web server base url
      */
-    private String serverUrl;
+    private String                       serverUrl;
 
     /**
      * Set comments check mode
      */
-    private boolean isStrict;
+    private boolean                      isStrict;
 
     /**
      * Merge all api doc into one document
      */
-    private boolean allInOne;
+    private boolean                      allInOne;
 
     /**
      * output path
      */
-    private String outPath;
-
+    private String                       outPath;
 
     /**
      * source path
      */
-    private List<SourceCodePath> sourceCodePaths;
+    private List<SourceCodePath>         sourceCodePaths;
 
     /**
      * list of Request headers
      */
-    private List<ApiReqHeader> requestHeaders;
+    private List<ApiReqHeader>           requestHeaders;
 
     /**
      * @since 1.7.5
      * cover old all in one markdown
      */
-    private boolean coverOld;
+    private boolean                      coverOld;
+
+    private boolean                      dsf;
 
     /**
      * list of custom response filed
      */
-    private List<CustomRespField> customResponseFields;
+    private List<CustomRespField>        customResponseFields;
 
     /**
      * List of error code
@@ -84,40 +85,39 @@ public class ApiConfig {
      * @return
      */
 
-    private List<ApiErrorCode> errorCodes;
+    private List<ApiErrorCode>           errorCodes;
 
     /**
      * controller package filters
      */
-    private String packageFilters;
+    private String                       packageFilters;
 
     /**
      * List of change log
      */
-    private List<RevisionLog> revisionLogs;
+    private List<RevisionLog>            revisionLogs;
 
     /**
      * @since 1.7+
      */
-    private boolean md5EncryptedHtmlName;
+    private boolean                      md5EncryptedHtmlName;
 
     /**
      * language support
      *
      * @since 1.7+
      */
-    private DocLanguage language;
+    private DocLanguage                  language;
 
     /**
      * adoc flag
      */
-    private boolean adoc;
-
+    private boolean                      adoc;
 
     /**
      * api data dictionary
      */
-    private List<ApiDataDictionary> dataDictionaries;
+    private List<ApiDataDictionary>      dataDictionaries;
 
     /**
      * @since 1.7.9
@@ -129,19 +129,26 @@ public class ApiConfig {
      * @since 1.7.5
      * project name
      */
-    private String projectName;
+    private String                       projectName;
 
     /**
      * Skip Transient Field
      */
-    private boolean skipTransientField = true;
+    private boolean                      skipTransientField = true;
 
     /**
      * @since 1.7.10
      * default show author
      */
-    private boolean showAuthor = true;
+    private boolean                      showAuthor         = true;
 
+    public boolean isDsf() {
+        return dsf;
+    }
+
+    public void setDsf(boolean dsf) {
+        this.dsf = dsf;
+    }
 
     public String getServerUrl() {
         return serverUrl;
@@ -173,8 +180,7 @@ public class ApiConfig {
 
     public void setRequestHeaders(ApiReqHeader... requestHeaders) {
         this.requestHeaders = CollectionUtil.asList(requestHeaders);
-        this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc() + "(Global)"))
-                .collect(Collectors.toList());
+        this.requestHeaders.stream().map(header -> header.setDesc(header.getDesc() + "(Global)")).collect(Collectors.toList());
     }
 
     public List<CustomRespField> getCustomResponseFields() {
@@ -184,7 +190,6 @@ public class ApiConfig {
     public void setCustomResponseFields(CustomRespField... customResponseFields) {
         this.customResponseFields = CollectionUtil.asList(customResponseFields);
     }
-
 
     public List<ApiErrorCode> getErrorCodes() {
         return errorCodes;
@@ -225,7 +230,6 @@ public class ApiConfig {
     public void setRevisionLogs(RevisionLog... revisionLogs) {
         this.revisionLogs = CollectionUtil.asList(revisionLogs);
     }
-
 
     public boolean isMd5EncryptedHtmlName() {
         return md5EncryptedHtmlName;

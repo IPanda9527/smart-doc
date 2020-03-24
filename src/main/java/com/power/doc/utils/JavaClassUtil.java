@@ -64,6 +64,7 @@ public class JavaClassUtil {
             if (cls1.isInterface() &&
                     !JavaClassValidateUtil.isCollection(className) &&
                     !JavaClassValidateUtil.isMap(className)) {
+
                 List<JavaMethod> methods = cls1.getMethods();
                 for (JavaMethod javaMethod : methods) {
                     String methodName = javaMethod.getName();

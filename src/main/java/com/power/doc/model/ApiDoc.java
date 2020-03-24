@@ -26,24 +26,29 @@ import java.util.List;
 
 public class ApiDoc {
 
+    private String             dsfCode        = "dsf.flight.marketing.servicecore";
+
+    private String             dsfVersion     = "1.0.0.0";
+
+    private String             dsfServiceName = "promotion";
     /**
      * Order of controller
      *
      * @since 1.7+
      */
-    public int order;
+    public int                 order;
 
     /**
      * controller name
      */
-    private String name;
+    private String             name;
 
     /**
      * controller alias handled by md5
      *
      * @since 1.7+
      */
-    private String alias;
+    private String             alias;
 
     /**
      * List of method doc
@@ -53,7 +58,31 @@ public class ApiDoc {
     /**
      * method description
      */
-    private String desc;
+    private String             desc;
+
+    public String getDsfCode() {
+        return dsfCode;
+    }
+
+    public void setDsfCode(String dsfCode) {
+        this.dsfCode = dsfCode;
+    }
+
+    public String getDsfVersion() {
+        return dsfVersion;
+    }
+
+    public void setDsfVersion(String dsfVersion) {
+        this.dsfVersion = dsfVersion;
+    }
+
+    public String getDsfServiceName() {
+        return dsfServiceName;
+    }
+
+    public void setDsfServiceName(String dsfServiceName) {
+        this.dsfServiceName = dsfServiceName;
+    }
 
     public String getName() {
         return name;
